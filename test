@@ -71,7 +71,7 @@ if uploaded_file:
             nowe_wiersze.append({'Numer rejsu': numer, 'Dzień Tyg': dzien, '+': plus, 'Port': org, 'Date': date, 'nrrot': nrrot})
             nowe_wiersze.append({'Numer rejsu': numer, 'Dzień Tyg': przesun_dzien(dzien) if plus == 1 else dzien,
                                  '+': plus, 'Port': dest, 'Date': date})
-          nrrot += 1
+            nrrot += 1
 
         df6 = pd.DataFrame(nowe_wiersze)
         df6 = df6.rename(columns={'Port': 'Airport'}).drop(columns="+")
