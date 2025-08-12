@@ -61,9 +61,30 @@ if uploaded_file:
 
         df6_uzupelniony = df6.merge(df1, on=['Airport', 'Numer rejsu', 'Dzień Tyg'], how='left')
 
+        
+# 🔁 Łączenie wierszy parami
+        def polacz_wiersze_parami(df):
+            polaczone_wiersze = []
+            for i in range(0, len(df) - 1, 2):
+                w1 = df.iloc[i]
+                w2 = df.iloc[i + 1]
+                nowy_wiersz = {
+                    'Numer rejsu': w1['Numer rejsu'],
+                    'Dzień Tyg': w1['Dzień Tyg'],
+                    'Date': w1['Date'],
+                    'Airport': w1['Airport'],
+                    'Dopuszczalne anulacje': w1['Dopuszczalne anulacje'],
+                    'Airport2': w2['Airport'],
+                    'Dopuszczalne anulacje2': w2['Dopuszczalne anulacje']
+                }
+                polaczone_wiersze.append(nowy_wiersz)
+            return pd.DataFrame(polaczone_wiersze)
+
+        df_final = polacz_wiersze_parami(df6_uzupelniony)
+
         output = io.BytesIO()
         with pd.ExcelWriter(output, engine='openpyxl') as writer:
-            df6_uzupelniony.to_excel(writer, index=False)
+            df_final.to_excel(writer, index=False)
         output.seek(0)
 
         st.success("Dane zostały przetworzone pomyślnie.")
@@ -71,5 +92,3 @@ if uploaded_file:
                            data=output,
                            file_name="propozycje_anulacji.xlsx",
                            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-    except Exception as e:
-        st.error(f"Wystąpił błąd podczas przetwarzania pliku: {e}")
