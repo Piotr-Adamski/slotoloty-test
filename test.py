@@ -3,7 +3,6 @@ import pandas as pd
 import requests
 import io
 
-
 st.title("Slotoloty")
 
 # link do bezpośredniego pobierania z Dropbox
@@ -45,7 +44,6 @@ if uploaded_file:
                 return dzien
 
         nowe_wiersze = []
-        nrrot = 1
         for _, row in df5.iterrows():
             numer = row['Numer rejsu']
             dzien = row['Dzień Tyg']
@@ -54,10 +52,9 @@ if uploaded_file:
             dest = row['Dest']
             date = row['Date']
 
-            nowe_wiersze.append({'Numer rejsu': numer, 'Dzień Tyg': dzien, '+': plus, 'Port': org, 'Date': date, 'nrrot': nrrot})
+            nowe_wiersze.append({'Numer rejsu': numer, 'Dzień Tyg': dzien, '+': plus, 'Port': org, 'Date': date})
             nowe_wiersze.append({'Numer rejsu': numer, 'Dzień Tyg': przesun_dzien(dzien) if plus == 1 else dzien,
                                  '+': plus, 'Port': dest, 'Date': date})
-            nrrot += 1
 
         df6 = pd.DataFrame(nowe_wiersze)
         df6 = df6.rename(columns={'Port': 'Airport'}).drop(columns="+")
