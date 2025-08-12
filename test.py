@@ -5,7 +5,7 @@ import io
 
 st.title("Slotoloty")
 
-# link do bezpośredniego pobierania z Dropbox
+# 📥 Pobieranie danych z Dropbox
 dropbox_url = "https://www.dropbox.com/scl/fi/p9bkjet6zo4o10x6ysar6/sloty.xlsx?rlkey=n0z3ox0ous5u1u744bguan7ad&st=h5jbvqzc&dl=1"
 
 try:
@@ -17,7 +17,6 @@ try:
 except Exception as e:
     st.error(f"Błąd podczas pobierania pliku sloty.xlsx z Dropbox: {e}")
     st.stop()
-
 
 # 📤 Wgranie pliku testowego przez użytkownika
 uploaded_file = st.file_uploader("Wgraj plik testowe.xlsx", type=["xlsx"])
@@ -43,6 +42,7 @@ if uploaded_file:
             except:
                 return dzien
 
+        # 🔄 Rozbijanie wierszy na dwa
         nowe_wiersze = []
         for _, row in df5.iterrows():
             numer = row['Numer rejsu']
@@ -52,17 +52,17 @@ if uploaded_file:
             dest = row['Dest']
             date = row['Date']
 
-            nowe_wiersze.append({'Numer rejsu': numer, 'Dzień Tyg': dzien, '+': plus, 'Port': org, 'Date': date})
+            nowe_wiersze.append({'Numer rejsu': numer, 'Dzień Tyg': dzien, 'Port': org, 'Date': date})
             nowe_wiersze.append({'Numer rejsu': numer, 'Dzień Tyg': przesun_dzien(dzien) if plus == 1 else dzien,
-                                 '+': plus, 'Port': dest, 'Date': date})
+                                 'Port': dest, 'Date': date})
 
         df6 = pd.DataFrame(nowe_wiersze)
-        df6 = df6.rename(columns={'Port': 'Airport'}).drop(columns="+")
+        df6 = df6.rename(columns={'Port': 'Airport'})
 
+        # 🔗 Łączenie z danymi z Dropbox
         df6_uzupelniony = df6.merge(df1, on=['Airport', 'Numer rejsu', 'Dzień Tyg'], how='left')
 
-        
-# 🔁 Łączenie wierszy parami
+        # 🔁 Łączenie wierszy parami
         def polacz_wiersze_parami(df):
             polaczone_wiersze = []
             for i in range(0, len(df) - 1, 2):
@@ -82,6 +82,7 @@ if uploaded_file:
 
         df_final = polacz_wiersze_parami(df6_uzupelniony)
 
+        # 📁 Eksport do Excela
         output = io.BytesIO()
         with pd.ExcelWriter(output, engine='openpyxl') as writer:
             df_final.to_excel(writer, index=False)
@@ -92,3 +93,5 @@ if uploaded_file:
                            data=output,
                            file_name="propozycje_anulacji.xlsx",
                            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    except Exception as e:
+        st.error(f"Wystąpił błąd podczas przetwarzania pliku: {e}")
