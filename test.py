@@ -3,6 +3,19 @@ import pandas as pd
 import requests
 import io
 
+def check_password():
+    password = st.text_input("Wprowadź hasło:", type="password")
+    if password == "HNRO2025":
+        return True
+    elif password:
+        st.error("Nieprawidłowe hasło.")
+        return False
+    else:
+        return False
+
+if not check_password():
+    st.stop()
+
 st.title("Slotoloty")
 
 # 📥 Pobieranie danych z Dropbox
