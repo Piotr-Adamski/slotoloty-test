@@ -39,10 +39,10 @@ if uploaded_file:
         df5 = pd.read_excel(uploaded_file, engine="openpyxl")
         df5 = df5.drop(columns=["NO", "Al", "OS", "Own", "A/C", "Cfg", "Seats", "Srv", "Class", "Blkt", "Cntxt", "Reason", "Act", "Change", "Time", "By"])
         df5['Date'] = pd.to_datetime(df5['Date']).dt.date
-
+        
         df5.columns = ["Numer rejsu", "Date", "Dzień Tyg", "Org","STD (UTC)","STA (UTC)","+", "Dest"]
         df5 = df5[["Numer rejsu", "Date", "Dzień Tyg", "STD (UTC)", "STA (UTC)", "+", "Org", "Dest"]]
-
+        df5['STA (UTC)'] = df5['STA (UTC)'].apply(lambda x: str(x).split()[1])
         dni_map = {'MON': 1, 'TUE': 2, 'WED': 3, 'THU': 4, 'FRI': 5, 'SAT': 6, 'SUN': 7}
         df5['Dzień Tyg'] = df5['Dzień Tyg'].str.strip().map(dni_map)
         df5 = df5.dropna()
