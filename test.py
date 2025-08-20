@@ -68,7 +68,7 @@ if uploaded_file:
 
             nowe_wiersze.append({'Numer rejsu': numer, 'Dzień Tyg': dzien, 'Port': org, 'Date': date, 'STD (UTC)': std, 'STA (UTC)': sta})
             nowe_wiersze.append({'Numer rejsu': numer, 'Dzień Tyg': przesun_dzien(dzien) if plus == 1 else dzien,
-                                 'Port': dest, 'Date': date, 'STD (UTC)': std, 'STA (UTC)': sta })
+                                 'Port': dest, 'Date': date})
 
         df6 = pd.DataFrame(nowe_wiersze)
         df6 = df6.rename(columns={'Port': 'Airport'})
@@ -86,6 +86,8 @@ if uploaded_file:
                     'Numer rejsu': w1['Numer rejsu'],
                     'Dzień Tyg': w1['Dzień Tyg'],
                     'Date': w1['Date'],
+                    'STD (UTC)': w1['STD (UTC)'],
+                    'STA (UTC)': w1['STA (UTC)'],
                     'Airport': w1['Airport'],
                     'Dopuszczalne anulacje': w1['Dopuszczalne anulacje'],
                     'Airport2': w2['Airport'],
