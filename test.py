@@ -37,12 +37,11 @@ uploaded_file = st.file_uploader("Wgraj plik testowe.xlsx", type=["xlsx"])
 if uploaded_file:
     try:
         df5 = pd.read_excel(uploaded_file, engine="openpyxl")
-        df5 = df5.drop(columns=["NO", "Al", "OS", "STD (UTC)", "STA (UTC)", "Own", "A/C", "Cfg", "Seats",
-                                "Srv", "Class", "Blkt", "Cntxt", "Reason", "Act", "Change", "Time", "By"])
+        df5 = df5.drop(columns=["NO", "Al", "OS", "Own", "A/C", "Cfg", "Seats", "Srv", "Class", "Blkt", "Cntxt", "Reason", "Act", "Change", "Time", "By"])
         df5['Date'] = pd.to_datetime(df5['Date']).dt.date
 
-        df5.columns = ["Numer rejsu", "Date", "Dzień Tyg", "Org", "+", "Dest"]
-        df5 = df5[["Numer rejsu", "Date", "Dzień Tyg", "+", "Org", "Dest"]]
+        df5.columns = ["Numer rejsu", "Date", "Dzień Tyg", "Org","STD (UTC)","STA (UTC)","+", "Dest"]
+        df5 = df5[["Numer rejsu", "Date", "Dzień Tyg", "STD (UTC)", "STA (UTC)", "+", "Org", "Dest"]]
 
         dni_map = {'MON': 1, 'TUE': 2, 'WED': 3, 'THU': 4, 'FRI': 5, 'SAT': 6, 'SUN': 7}
         df5['Dzień Tyg'] = df5['Dzień Tyg'].str.strip().map(dni_map)
@@ -64,10 +63,12 @@ if uploaded_file:
             org = row['Org']
             dest = row['Dest']
             date = row['Date']
+            std = row['STD (UTC)']
+            sta = row['STA (UTC)']
 
-            nowe_wiersze.append({'Numer rejsu': numer, 'Dzień Tyg': dzien, 'Port': org, 'Date': date})
+            nowe_wiersze.append({'Numer rejsu': numer, 'Dzień Tyg': dzien, 'Port': org, 'Date': date, 'STD (UTC)': std, 'STA (UTC)': sta})
             nowe_wiersze.append({'Numer rejsu': numer, 'Dzień Tyg': przesun_dzien(dzien) if plus == 1 else dzien,
-                                 'Port': dest, 'Date': date})
+                                 'Port': dest, 'Date': date, 'STD (UTC)': std, 'STA (UTC)': sta })
 
         df6 = pd.DataFrame(nowe_wiersze)
         df6 = df6.rename(columns={'Port': 'Airport'})
