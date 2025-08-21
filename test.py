@@ -19,10 +19,10 @@ if not check_password():
 st.title("Slotoloty")
 
 # 📥 Pobieranie danych z Dropbox
-dropbox_url = "https://www.dropbox.com/scl/fi/p9bkjet6zo4o10x6ysar6/sloty.xlsx?rlkey=n0z3ox0ous5u1u744bguan7ad&st=h5jbvqzc&dl=1"
+dropbox_excel_url = "https://www.dropbox.com/scl/fi/rx13u41kx1jjospqngzxs/sloty.xlsx?rlkey=al0hzlv1n7torvt8tk71elrw2&st=u8dq7mcp&dl=1"
 
 try:
-    response = requests.get(dropbox_url)
+    response = requests.get(dropbox_excel_url)
     response.raise_for_status()
     df1 = pd.read_excel(io.BytesIO(response.content), engine="openpyxl")
     df1 = df1.drop(df1.columns[3:9], axis=1)
