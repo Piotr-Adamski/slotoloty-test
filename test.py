@@ -4,17 +4,19 @@ import requests
 import io
 
 def check_password():
-    password = st.text_input("Wprowadź hasło:", type="password")
-    if password == "HNRO2025":
-        return True
-    elif password:
-        st.error("Nieprawidłowe hasło.")
-        return False
-    else:
-        return False
+    if "logged_in" not in st.session_state:
+        st.session_state.logged_in = False
 
-if not check_password():
-    st.stop()
+    if not st.session_state.logged_in:
+        password = st.text_input("Wprowadź hasło:", type="password")
+        if password == "HNRO2025":
+            st.session_state.logged_in = True
+            st.experimental_rerun()
+        elif password:
+            st.error("Nieprawidłowe hasło.")
+        return False
+    return True
+
 
 st.title("Slotoloty")
 
